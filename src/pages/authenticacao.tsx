@@ -1,14 +1,24 @@
 import { useState } from "react";
 import AuthInput from "../components/auth/AuthInput";
+import { IconeAjustes, IconeAtencao } from "../components/icons";
+import useAuth from "../data/hook/useAuth";
 
 export default function Authenticacao() {
+    const { usuario, loginGoogle } = useAuth()
     const [modo, setModo] = useState<'login' | 'cadastro'>('login')
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
+    const [error, setError] = useState('')
+    function exibirError(msg: string, tempoSegundos: number = 5) {
+        setError(msg)
+        setTimeout(() => setError(''), tempoSegundos * 1000)
+    }
     function submeter() {
         if(modo === 'login') {
             console.log('Logar')
+            exibirError('Ocorreu um erro no login')
         } else {
+            exibirError('Ocorreu um erro no cadastro')
             console.log('Cadastrar')
         }
     }
@@ -33,6 +43,15 @@ export default function Authenticacao() {
                     `}>
                     {modo === 'login' ? 'Entre com sua Conta' : 'Cadastre-se na Plataforma'}
                 </h1>
+                {error ? (
+                    <div className={` flex items-center
+                        bg-red-400 text-white py-3 px-5 my-2
+                        rounded-lg border border-red-700`}>
+                        {IconeAtencao}
+                        <span className={`ml-2`}>{error}</span>
+                    </div>
+                ) : false}   
+
                 <AuthInput 
                     label="Email"
                     tipo="email"
@@ -53,7 +72,7 @@ export default function Authenticacao() {
 
                 <hr className={`my-6 border-gray-300 w-full`}/>
 
-                <button onClick={submeter} className={`
+                <button onClick={loginGoogle} className={`
                     w-full bg-red-500 hover:bg-red-400
                     text-white rounded-lg px-4 py-3`}>
                     Entrar com Google
