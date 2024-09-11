@@ -1,3 +1,4 @@
+import { cookies } from "next/headers"
 import { createContext, useState } from "react"
 
 type Tema = 'dark' | ''
