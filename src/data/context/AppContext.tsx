@@ -1,10 +1,10 @@
 import { cookies } from "next/headers"
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 
-type Tema = 'dark' | ''
+//type Tema = 'dark' | ''
 
 interface AppContextProps {
-    tema?: Tema
+    tema?: string
     nome?: string
     children?: any
     alternarTema?: () => void
@@ -20,8 +20,15 @@ export function AppProvider(props: AppContextProps) {
 
     function alternarTema() {
         console.log('alternarTema ...')
-        setTema(tema === '' ? 'dark' : '')
+        const novoTema = tema === '' ? 'dark' : ''
+        setTema(novoTema)
+        localStorage.setItem('tema', novoTema)
     }
+
+    useEffect(() => {
+        const temaSalvo = localStorage.getItem('tema')
+        setTema(temaSalvo)
+    }, [])
 
     return (
         <AppContext.Provider value={{
