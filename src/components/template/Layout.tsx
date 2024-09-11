@@ -5,7 +5,9 @@ import Cabecalho from './Cabecalho'
 import Conteudo from './Conteudo'
 import MenuLateral from './MenuLateral'
 import useAppData from '@/src/data/hook/useAppData'
-import ForcarAuthenticacao from '../auth/ForcarAuthenticacao'
+import forcarAuthenticacao from '@/src/functions/ForcarAuthenticacao'
+//import ForcarAuthenticacao from '../auth/ForcarAuthenticacao'
+
 
 interface LayoutProps {
     titulo: string
@@ -15,8 +17,9 @@ interface LayoutProps {
 
 export default function Layout(props: LayoutProps) {
     const ctx = useAppData()
-    return (
-        <ForcarAuthenticacao>
+    //return (
+    return forcarAuthenticacao(
+        //<ForcarAuthenticacao>
             <div className={`${ctx.tema} flex h-screen w-screen`}>
                 <MenuLateral/>
                 <div className={`flex 
@@ -31,6 +34,6 @@ export default function Layout(props: LayoutProps) {
                     </Conteudo>
                 </div>
             </div>
-        </ForcarAuthenticacao>
+        //</ForcarAuthenticacao>
     )
 }
