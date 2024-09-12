@@ -4,7 +4,7 @@ import { IconeAjustes, IconeAtencao } from "../components/icons";
 import useAuth from "../data/hook/useAuth";
 
 export default function Authenticacao() {
-    const { usuario, loginGoogle } = useAuth()
+    const { cadastrar, login, loginGoogle } = useAuth()
     const [modo, setModo] = useState<'login' | 'cadastro'>('login')
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
@@ -13,15 +13,45 @@ export default function Authenticacao() {
         setError(msg)
         setTimeout(() => setError(''), tempoSegundos * 1000)
     }
-    function submeter() {
-        if(modo === 'login') {
-            console.log('Logar')
-            exibirError('Ocorreu um erro no login')
-        } else {
-            exibirError('Ocorreu um erro no cadastro')
-            console.log('Cadastrar')
+    
+    async function submeter() {
+        try {
+            if(modo === 'login') {
+                console.log('Logar')
+                //exibirError('Ocorreu um erro no login')
+                await login(email, senha)
+            } else {
+                //exibirError('Ocorreu um erro no cadastro')
+                await cadastrar(email, senha)
+            }
+        } catch(e){
+            if(modo === 'login') {
+                exibirError(mapAuthCodeToMessage(e.code) ?? 'Erro no login.')
+                console.log(e.code + ' | ' + e.message)
+            } else {
+                exibirError('Ocorreu um erro no cadastro')             
+            }
         }
     }
+
+    function mapAuthCodeToMessage(authCode) {
+        // https://firebase.google.com/docs/auth/admin/errors
+        switch (authCode) {
+            case "auth/invalid-password":
+                return "Password provided is not corrected";
+      
+            case "auth/invalid-email":
+                return "Email provided is invalid";
+            
+            case "auth/internal-error":
+                return "Erro não catalogado";
+          // Many more authCode mapping here...
+      
+          default:
+            return "";
+        }
+      }
+
     return (
         <div className={`
             flex h-screen items-center justify-center
